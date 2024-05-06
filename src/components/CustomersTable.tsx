@@ -6,6 +6,7 @@ import { Customer } from "../models/Customer";
 
 import { Label, TextInput } from "flowbite-react";
 import { HiSearch, HiDocumentSearch } from "react-icons/hi";
+import { Link } from "react-router-dom";
 
 export function CustomersTable() {
 
@@ -74,6 +75,8 @@ export function CustomersTable() {
         setRange([(page - 1) * 10, page * 10 - 1])
     }
 
+    // Search
+    const [searchValue, setSearchValue] = useState<string>('');
 
 
 
@@ -86,11 +89,26 @@ export function CustomersTable() {
         // Si cambian los filtros, se regresa a la primera página
         setRange([0, 9]);
         setCurrentPage(1);
-    }, [days, statusFilters]);
+    }, [days, statusFilters, searchValue]);
 
     async function getCustomers() {
-        const { data, count } = await supabase.from("clients")
-            .select('name, lastname, street_name, street_no, colony, status', { count: 'exact' })
+        let query = supabase.from("clients")
+            .select('id, name, lastname, street_name, street_no, colony, status', { count: 'exact' })
+
+        if (!searchValue) {
+            query = query.in('serviceDay', days)
+                .in('status', statusFilters)
+                .order('position', { ascending: true })
+                .range(range[0], range[1]);
+        }
+        else {
+            query = query.textSearch('name_lastname', `${searchValue}`)
+                .order('position', { ascending: true })
+                .range(range[0], range[1]);
+        }
+
+        const { data, count } = await query
+
             .in('serviceDay', days)
             .in('status', statusFilters)
             .order('position', { ascending: true })
@@ -102,9 +120,9 @@ export function CustomersTable() {
     }
 
     return (
-        <div className="w-3/4 max-w-7xl mx-auto h-full max-h-[780px] my-auto p-4">
-            <div className=" w-full flex gap-4" >
-                <Dropdown label="Viernes" dismissOnClick={false} placement="bottom-start">
+        <div className=" h-full max-h-[780px] my-auto p-4">
+            <div className=" w-full flex gap-4 mb-4" >
+                <Dropdown label="Días de servicio" dismissOnClick={false} placement="bottom-start" >
                     <Dropdown.Item className="flex gap-2 hover:outline-none">
                         <Checkbox id="all" checked={
                             days.length === 5
@@ -142,7 +160,7 @@ export function CustomersTable() {
                         <Label htmlFor="viernes">Viernes</Label>
                     </Dropdown.Item>
                 </Dropdown>
-                <Dropdown label="Pagados" dismissOnClick={false} placement="bottom-start">
+                <Dropdown label="Status" dismissOnClick={false} placement="bottom-start" >
                     <Dropdown.Item className="flex gap-2 hover:outline-none">
                         <Checkbox id="all" checked={
                             statusFilters.length === 4
@@ -174,7 +192,7 @@ export function CustomersTable() {
                         <Label htmlFor="atrasado">Atrasado</Label>
                     </Dropdown.Item>
                 </Dropdown>
-                <TextInput id="email4" type="email" icon={HiSearch} placeholder="name@flowbite.com" required className="ml-auto basis-1/3" />
+                <TextInput id="email4" type="email" icon={HiSearch} placeholder="Buscar" required className="ml-auto basis-1/3" value={searchValue} onChange={(e) => setSearchValue(e.target.value)} />
             </div>
             <Table className="">
                 <Table.Head>
@@ -205,14 +223,14 @@ export function CustomersTable() {
                                 </Badge>
                             </Table.Cell>
                             <Table.Cell>
-                                <a href="#" className="font-medium text-cyan-600 hover:underline dark:text-cyan-500">
-                                    Edit
-                                </a>
+                                <Link to={`customers/${customer.id}`} className="font-medium text-cyan-600 hover:underline dark:text-cyan-500">
+                                    view
+                                </Link>
                             </Table.Cell>
                         </Table.Row>
                     ))}
                     {/* Renderiza filas vacías, escribe "empty" con texto transparente */}
-                    {  customers &&
+                    {customers &&
                         customers.length > 0 && customers.length < 10 && Array.from({ length: 10 - customers.length }).map((_, i) => (
                             <Table.Row key={i} className="bg-white dark:border-gray-700 dark:bg-gray-800">
                                 <Table.Cell colSpan={4} className="text-center">
