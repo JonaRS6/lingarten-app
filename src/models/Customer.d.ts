@@ -10,7 +10,7 @@ export interface Customer {
   cancelDate?: number
   printq: boolean
   position: number
-  status: string
+  status: 'pagado' | 'pendiente' | 'atrasado'
   firestore_id?: string
   street_no: string
   street_name: string
