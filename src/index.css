@@ -1,78 +1,94 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 @layer base {
   :root {
     --background: 0 0% 100%;
     --foreground: 222.2 47.4% 11.2%;
- 
+
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
- 
+
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 47.4% 11.2%;
- 
+
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
- 
+
     --card: 0 0% 100%;
     --card-foreground: 222.2 47.4% 11.2%;
- 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
- 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
- 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
- 
+
+    /* lime-500 */
+    --primary: 83.7 80.5% 44.3%;
+    /* lime-50 */
+    --primary-foreground: 78.3 92% 95.1%;
+
+    /* teal-500 */
+    --secondary: 173.4 80.4% 40%;
+    /* teal-50 */
+    --secondary-foreground: 166.2 76.5% 96.7%;
+
+    /* lime-200 */
+    --accent: 80.9 88.5% 79.6%;
+    /* lime-800 */
+    --accent-foreground: 86.3 69% 22.7%;
+
     --destructive: 0 100% 50%;
     --destructive-foreground: 210 40% 98%;
- 
-    --ring: 215 20.2% 65.1%;
- 
-    --radius: 0.5rem;
+
+    --ring: 83.7 80.5% 44.3%;
+
+    --radius: 0.75rem;
   }
- 
+
   .dark {
     --background: 224 71% 4%;
     --foreground: 213 31% 91%;
- 
+
     --muted: 223 47% 11%;
     --muted-foreground: 215.4 16.3% 56.9%;
- 
+
     --accent: 216 34% 17%;
     --accent-foreground: 210 40% 98%;
- 
+
     --popover: 224 71% 4%;
     --popover-foreground: 215 20.2% 65.1%;
- 
+
     --border: 216 34% 17%;
     --input: 216 34% 17%;
- 
+
     --card: 224 71% 4%;
     --card-foreground: 213 31% 91%;
- 
-    --primary: 210 40% 98%;
+
+    /* green-500 */
+    --primary: 142.1 70.6% 45.3%;
     --primary-foreground: 222.2 47.4% 1.2%;
- 
-    --secondary: 222.2 47.4% 11.2%;
-    --secondary-foreground: 210 40% 98%;
- 
+
+     /* teal-500 */
+     --secondary: 173.4 80.4% 40%;
+     /* teal-50 */
+     --secondary-foreground: 166.2 76.5% 96.7%;
+
+    /* green-400 */
+    --accent: 141.9 69.2% 58%;
+    /* green-900 */
+    --accent-foreground: 143.8 61.2% 20.2%;
+
     --destructive: 0 63% 31%;
     --destructive-foreground: 210 40% 98%;
- 
+
     --ring: 216 34% 17%;
- 
-    --radius: 0.5rem;
+
+    --radius: 0.75rem;
   }
 }
- 
+
 @layer base {
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
