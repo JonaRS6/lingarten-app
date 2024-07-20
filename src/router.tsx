@@ -6,32 +6,44 @@ export const routes: RouteObject[] = [
         element: undefined,
         children: [
             {
-                id: "dashboard",
+                id: "Dashboard",
                 index: true,
                 path: "",
                 element: undefined,
             },
             {
-                id: "customers",
+                id: "Clientes",
                 path: "customers",
                 element: undefined,
+                handle: {
+                    crumb: (id: string) => id
+                },
                 children: [
                     {
                         id: "customer",
-                        path: ":id",
+                        path: ":idCustomer",
                         element: undefined,
+                        handle: {
+                            crumb: (id: string, params:any) => params.idCustomer.toString()
+                        }
                     }
                 ]
             },
             {
-                id: "payments",
+                id: "Pagos",
                 path: "payments",
                 element: undefined,
+                handle: {
+                    crumb: (id: string) => id
+                }
             },
             {
-                id: "settings",
+                id: "Configuración",
                 path: "settings",
                 element: undefined,
+                handle: {
+                    crumb: (id: string) => id
+                }
             },
         ]
     }

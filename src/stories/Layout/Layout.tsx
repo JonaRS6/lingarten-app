@@ -1,5 +1,6 @@
 import {
     Home,
+    HomeIcon,
     LineChart,
     Package,
     Package2,
@@ -34,7 +35,7 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { NavLink } from "react-router-dom"
+import { NavLink, UIMatch, useMatches } from "react-router-dom"
 
 export function Layout() {
     return (
@@ -158,15 +159,7 @@ export function Layout() {
                             </nav>
                         </SheetContent>
                     </Sheet>
-                    <Breadcrumb className="hidden md:flex">
-                        <BreadcrumbList>
-
-                            <BreadcrumbSeparator />
-                            <BreadcrumbItem>
-                                <BreadcrumbPage>All Products</BreadcrumbPage>
-                            </BreadcrumbItem>
-                        </BreadcrumbList>
-                    </Breadcrumb>
+                    <Breadcrumbs />
                     <div className="relative ml-auto flex-1 md:grow-0">
                         <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                         <Input
@@ -200,5 +193,35 @@ export function Layout() {
                 </main>
             </div>
         </div>
+    )
+}
+
+export const Breadcrumbs = () => {
+    let matches = useMatches();
+    let crumbs = matches
+        // first get rid of any matches that don't have handle and crumb
+        .filter((match: UIMatch<unknown, any>) => Boolean(match.handle?.crumb))
+        // now map them into an array of elements, passing the loader
+        // data to each one
+        .map((match: UIMatch<unknown, any>) => match.handle.crumb(match.id, match.params));
+    return (
+        <Breadcrumb className="select-none">
+            <BreadcrumbList>
+                <BreadcrumbItem>
+                    <Home className="h-4 w-4" />
+                </BreadcrumbItem>
+                {
+                    crumbs.map((crumb, index) => (
+                        <>
+                            <BreadcrumbSeparator key={"separator" + index} />
+                            <BreadcrumbItem key={index}>
+                                <BreadcrumbPage>{crumb}</BreadcrumbPage>
+                            </BreadcrumbItem>
+                        </>
+
+                    ))
+                }
+            </BreadcrumbList>
+        </Breadcrumb>
     )
 }

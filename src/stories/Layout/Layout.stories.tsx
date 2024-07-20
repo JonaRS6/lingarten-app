@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { reactRouterParameters, reactRouterOutlet } from 'storybook-addon-remix-react-router';
-import { Layout } from './Layout';
+import { Layout, Breadcrumbs as BreadcrumbsComponent } from './Layout';
 import { routes } from '@/router';
 
 const meta = {
@@ -16,3 +16,15 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
+
+export const Breadcrumbs: Story = {
+  parameters: {
+    layout: 'centered',
+    reactRouter: reactRouterParameters({
+      location: {
+        path: '/customers/1',
+      }
+    }),
+  },
+  render: () => <BreadcrumbsComponent />
+}
