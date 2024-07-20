@@ -6,6 +6,10 @@ import { reactRouterParameters, withRouter } from 'storybook-addon-remix-react-r
 import { routes } from '../src/router';
 
 import { withThemeByClassName } from "@storybook/addon-themes";
+import { initialize, mswLoader } from 'msw-storybook-addon'
+
+// Initialize MSW
+initialize()
 
 const preview: Preview = {
   parameters: {
@@ -22,7 +26,7 @@ const preview: Preview = {
       },
     }),
   },
-
+  loaders: [mswLoader],
   decorators: [
     withRouter,
     withThemeByClassName({

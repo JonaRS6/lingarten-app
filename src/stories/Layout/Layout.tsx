@@ -1,10 +1,8 @@
 import {
     Home,
-    HomeIcon,
-    LineChart,
-    Package,
     Package2,
     PanelLeft,
+    Receipt,
     Search,
     Settings,
     ShoppingCart,
@@ -36,6 +34,12 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { NavLink, UIMatch, useMatches } from "react-router-dom"
+
+import { useEffect, useRef, useState } from "react"
+import { searchCustomersAndReceipts } from "@/services/api"
+import { Separator } from "@/components/ui/separator"
+import { useDebounce } from "@/hooks/useDebounce"
+import { SearchResult } from "@/models/SearchResult"
 
 export function Layout() {
     return (
@@ -160,14 +164,7 @@ export function Layout() {
                         </SheetContent>
                     </Sheet>
                     <Breadcrumbs />
-                    <div className="relative ml-auto flex-1 md:grow-0">
-                        <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                        <Input
-                            type="search"
-                            placeholder="Search..."
-                            className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[320px]"
-                        />
-                    </div>
+                    <SearchBar />
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button
@@ -196,6 +193,9 @@ export function Layout() {
     )
 }
 
+/**
+ * Muestra la ruta actual en la que se encuentra el usuario
+ */
 export const Breadcrumbs = () => {
     let matches = useMatches();
     let crumbs = matches
@@ -225,3 +225,105 @@ export const Breadcrumbs = () => {
         </Breadcrumb>
     )
 }
+
+/**
+ * Barra de búsqueda para clientes y recibos
+ */
+export const SearchBar = () => {
+    const [isLoading, setIsLoading] = useState(false)
+
+    const [search, setSearch] = useState("")
+    const [open, setOpen] = useState(false)
+    const handleValueChange = (value: string) => {
+        setSearch(value)
+        setOpen(!!value)
+    }
+    const [customers, setCustomers] = useState<SearchResult[]>([])
+    const [receipts, setReceipts] = useState<SearchResult[]>([])
+    const debuncedSearch = useDebounce(search, 500)
+    useEffect(() => {
+        setIsLoading(true)
+        searchCustomersAndReceipts(debuncedSearch).then(data => {
+            setCustomers(data.filter(result => result.type === 'customer'))
+            setReceipts(data.filter(result => result.type === 'receipt'))
+            setIsLoading(false)
+        })
+    }, [debuncedSearch])
+
+
+    const ref = useRef<HTMLDivElement>(null);
+    useEffect(() => {
+        const handleClick = (e: MouseEvent) => {
+            if (ref.current && !ref.current.contains(e.target as Node)) {
+                setOpen(false)
+            }
+        }
+        document.addEventListener('click', handleClick)
+        return () => document.removeEventListener('click', handleClick)
+    }, [ref])
+    return (
+        <div className="relative ml-auto flex-1 md:grow-0">
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input
+                type="search"
+                placeholder="Buscar..."
+                value={search}
+                onChange={(e) => handleValueChange(e.target.value)}
+                className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[320px]"
+            />
+            {
+                open && (
+                    <div ref={ref} className="absolute top-11 left-0 w-full bg-background border rounded-lg shadow-lg p-1 text-sm text-muted-foreground">
+                        {
+                            isLoading && (
+                                <div className="flex py-1 px-2 rounded">
+                                    <p className="text-center w-full text-foreground">Buscando...</p>
+                                </div>
+                            )
+                        }
+                        {
+                            customers.length > 0 && (
+                                <div className="flex py-1 px-2 rounded font-bold text-xs">
+                                    <p>Clientes</p> <Users2 className="h-4 w-4 ml-auto" />
+                                </div>
+                            )
+                        }
+                        {
+                            customers.map(result => (
+                                <div key={result.id} className="flex py-1 px-2 rounded hover:bg-accent hover:text-accent-foreground cursor-pointer">
+                                    <p>{result.name}</p>
+                                </div>
+                            ))
+                        }
+                        {
+                            receipts.length > 0 && customers.length > 0 && (<Separator className="my-1" />)
+                        }
+                        {
+                            receipts.length > 0 && (
+                                <div className="flex py-1 px-2 rounded font-bold text-xs">
+                                    <p>Recibos</p> <Receipt className="h-4 w-4 ml-auto" />
+                                </div>
+                            )
+                        }
+                        {
+                            receipts.map(result => (
+                                <div key={result.id} className="flex py-1 px-2 rounded hover:bg-accent hover:text-accent-foreground cursor-pointer">
+                                    <p>{result.name}</p>
+                                </div>
+                            ))
+                        }
+                        {
+                            !isLoading &&
+                            customers.length === 0 && receipts.length === 0 && (
+                                <div className="flex py-1 px-2 rounded">
+                                    <p className="text-center w-full text-foreground">Sin resultados</p>
+                                </div>
+                            )
+                        }
+                    </div>
+                )
+            }
+        </div>
+    )
+}
+
