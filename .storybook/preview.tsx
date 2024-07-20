@@ -2,6 +2,8 @@ import type { Preview } from "@storybook/react";
 import '../src/index.css';
 import React from 'react';
 import { ThemeProvider } from '../src/components/theme-provider';
+import { reactRouterParameters, withRouter } from 'storybook-addon-remix-react-router';
+import { routes } from '../src/router';
 
 import { withThemeByClassName } from "@storybook/addon-themes";
 
@@ -13,17 +15,25 @@ const preview: Preview = {
         date: /Date$/i,
       },
     },
+    reactRouter: reactRouterParameters({
+      routing: {
+        useStoryElement: true,
+        ...routes[0] as any,
+      },
+    }),
   },
 
-  decorators: [withThemeByClassName({
-    themes: {
-      // nameOfTheme: 'classNameForTheme',
-      light: '',
-      dark: 'dark',
-    },
-    defaultTheme: 'light',
-  })
-    , (Story) => (
+  decorators: [
+    withRouter,
+    withThemeByClassName({
+      themes: {
+        // nameOfTheme: 'classNameForTheme',
+        light: '',
+        dark: 'dark',
+      },
+      defaultTheme: 'light',
+    }),
+    (Story) => (
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
         <Story />
       </ThemeProvider>

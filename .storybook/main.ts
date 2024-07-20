@@ -10,7 +10,8 @@ const config: StorybookConfig = {
     "@storybook/addon-interactions",
     "@storybook/addon-styling-webpack",
     "@storybook/addon-themes",
-    '@storybook/addon-backgrounds'
+    '@storybook/addon-backgrounds',
+    'storybook-addon-remix-react-router'
   ],
   framework: {
     name: "@storybook/react-vite",
