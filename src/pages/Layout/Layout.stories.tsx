@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { reactRouterParameters, reactRouterOutlet } from 'storybook-addon-remix-react-router';
+import { reactRouterParameters } from 'storybook-addon-remix-react-router';
 import { Layout, Breadcrumbs as BreadcrumbsComponent, SearchBar as SearchBarComponent } from './Layout';
 
 import { http, HttpResponse, delay } from 'msw'
