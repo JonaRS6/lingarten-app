@@ -11,7 +11,7 @@ export interface Customer {
   printq: boolean
   position: number
   status: 'pagado' | 'pendiente' | 'atrasado'
-  firestore_id?: string
+  firestore_id?: string.
   street_no: string
   street_name: string
   colony: string

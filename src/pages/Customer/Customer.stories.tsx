@@ -2,11 +2,12 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { reactRouterParameters } from 'storybook-addon-remix-react-router';
 
 import { http, HttpResponse, delay } from 'msw'
-import { Customers } from './Customers';
+import { Customer } from './Customer';
+import { CustomerForm } from './customer-form';
 
 const meta = {
-  title: 'Pages/Clientes',
-  component: Customers,
+  title: 'Pages/Cliente',
+  component: Customer,
   parameters: {
     // More on how to position stories at: https://storybook.js.org/docs/configure/story-layout
     layout: 'fullscreen',
@@ -16,7 +17,7 @@ const meta = {
       }
     }),
   },
-} satisfies Meta<typeof Customers>;
+} satisfies Meta<typeof Customer>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -72,3 +73,9 @@ export const Default: Story = {
   },
 };
 
+export const NewForm: Story = {
+    parameters: {
+        layout: "centered",
+    },
+    render: () => <CustomerForm />,
+};
