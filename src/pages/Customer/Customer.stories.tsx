@@ -4,6 +4,7 @@ import { reactRouterParameters } from 'storybook-addon-remix-react-router';
 import { http, HttpResponse, delay } from 'msw'
 import { Customer } from './Customer';
 import { CustomerForm } from './customer-form';
+import CustomerProfile from './customer-profile';
 
 const meta = {
   title: 'Pages/Cliente',
@@ -57,19 +58,6 @@ const TestSearchResults = [
 
 export const Default: Story = {
   parameters: {
-    msw: {
-      handlers: [
-        http.post('/api/v1/search', async ({ request }) => {
-          const body = await request.json()
-          console.log(body);
-          // @ts-ignore
-          const {search} = body
-          const filteredResults = TestSearchResults.filter(result => result.name.toLowerCase().includes(search?.toLowerCase() || ''))
-          await delay(50);
-          return HttpResponse.json(filteredResults)
-        }),
-      ],
-    },
   },
 };
 
@@ -79,3 +67,10 @@ export const NewForm: Story = {
     },
     render: () => <CustomerForm />,
 };
+
+export const ProfileCard: Story = {
+    parameters: {
+        layout: "centered",
+    },
+    render: () => <CustomerProfile customerId='WSVnjHoothqINiUs5Qaw'/>,
+}

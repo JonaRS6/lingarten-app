@@ -17,6 +17,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "@/components/ui/use-toast"
 import { Separator } from "@/components/ui/separator"
 import { CustomerForm } from "./customer-form"
+import CustomerProfile from "./customer-profile"
 
 const customerFormSchema = z.object({
     tel1: z.number().min(1000000000, { message: "Debe tener al menos 10 dígitos." }),
@@ -64,14 +65,8 @@ export function Customer() {
     }
 
     return (
-        <div className="hidden space-y-6 p-10 pb-16 md:block">
-            <div className="space-y-0.5">
-                <h2 className="text-2xl font-bold tracking-tight">Settings</h2>
-                <p className="text-muted-foreground">
-                    Manage your account settings and set e-mail preferences.
-                </p>
-            </div>
-            <Separator className="my-6" />
+        <div className="hidden space-y-6 p-10 pb-16 md:flex gap-12">
+           <CustomerProfile customerId="WSVnjHoothqINiUs5Qaw" />
             <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
                 <div className="flex-1 lg:max-w-5xl">
                     <CustomerForm />
