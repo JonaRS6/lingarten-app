@@ -72,7 +72,7 @@ export default function CustomerProfile(
         return "asdasd"
     }
     return (
-        <Card className="overflow-hidden md:w-96">
+        <Card className="overflow-hidden md:w-96 h-fit sticky top-10">
             <CardHeader className="flex flex-col items-start bg-muted/50">
                 <div className="grid gap-0.5">
                     <CardTitle className="group flex items-center gap-2 text-lg">

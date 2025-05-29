@@ -18,6 +18,12 @@ import { toast } from "@/components/ui/use-toast"
 import { Separator } from "@/components/ui/separator"
 import { CustomerForm } from "./customer-form"
 import CustomerProfile from "./customer-profile"
+import { useEffect, useState } from "react"
+import { Ticket } from "@/models/Ticket"
+import supabase from "@/utils/supabase"
+import { columns } from "./columns"
+import { DataTable } from "../Tickets/data-table"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 const customerFormSchema = z.object({
     tel1: z.number().min(1000000000, { message: "Debe tener al menos 10 dígitos." }),
@@ -63,13 +69,49 @@ export function Customer() {
             ),
         })
     }
+    const [tickets, setTickets] = useState<Ticket[]>([])
+
+    function getTickets() {
+        return supabase.from("tickets").select("*").eq("clientId", "WSVnjHoothqINiUs5Qaw").order("generated", { ascending: false })
+            .then(({ data, error }) => {
+                if (error) {
+                    console.error("error", error)
+                    return
+                }
+                setTickets(data as Ticket[])
+            }
+            )
+    }
+    useEffect(() => {
+        getTickets()
+    }, [])
 
     return (
-        <div className="hidden space-y-6 p-10 pb-16 md:flex gap-12">
-           <CustomerProfile customerId="WSVnjHoothqINiUs5Qaw" />
-            <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
+        <div className="hidden p-10 pb-16 md:flex gap-12 relative">
+            <CustomerProfile customerId="WSVnjHoothqINiUs5Qaw" />
+            {/*   <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
                 <div className="flex-1 lg:max-w-5xl">
                     <CustomerForm />
+                </div>
+            </div> */}
+            <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
+                <div className=" lg:max-w-5xl flex flex-col gap-6">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Notas</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <DataTable data={tickets} columns={columns} />
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Notas</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <DataTable data={tickets} columns={columns} />
+                        </CardContent>
+                    </Card>
                 </div>
             </div>
         </div>
